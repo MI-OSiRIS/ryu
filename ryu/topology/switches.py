@@ -491,7 +491,18 @@ class LLDPPacket(object):
         (src_port_no, ) = struct.unpack(LLDPPacket.PORT_ID_STR, port_id)
 
         return src_dpid, src_port_no
-
+# Mi-OSiRIS change start #
+    @staticmethod
+    def lldp_parse_new(data):
+        pkt = packet.Packet(data)
+        i = iter(pkt)
+        eth_pkt = six.next(i)
+        assert type(eth_pkt) == ethernet.ethernet
+        lldp_pkt = six.next(i)
+        if type(lldp_pkt) != lldp.lldp:
+            raise LLDPPacket.LLDPUnknownFormat()
+        return lldp_pkt
+# Mi-OSiRIS change end #
 
 class Switches(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION, ofproto_v1_2.OFP_VERSION,

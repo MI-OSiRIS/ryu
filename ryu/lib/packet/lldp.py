@@ -126,7 +126,6 @@ class lldp(packet_base.PacketBase):
     @classmethod
     def _parser(cls, buf):
         tlvs = []
-
         while buf:
             tlv_type = LLDPBasicTLV.get_type(buf)
             tlv = cls._tlv_parsers[tlv_type](buf)
@@ -136,7 +135,6 @@ class lldp(packet_base.PacketBase):
             if tlv.tlv_type == LLDP_TLV_END:
                 break
             assert len(buf) > 0
-
         lldp_pkt = cls(tlvs)
 
         assert lldp_pkt._tlvs_len_valid()
@@ -364,7 +362,9 @@ class SystemDescription(LLDPBasicTLV):
 @lldp.set_tlv_type(LLDP_TLV_SYSTEM_CAPABILITIES)
 class SystemCapabilities(LLDPBasicTLV):
     # chassis subtype(1) + system cap(2) + enabled cap(2)
-    _PACK_STR = '!BHH'
+    # Mi-OSiRIS change start #
+    _PACK_STR = '!HH'
+    # Mi-OSiRIS change end #
     _PACK_SIZE = struct.calcsize(_PACK_STR)
     _LEN_MIN = _PACK_SIZE
     _LEN_MAX = _PACK_SIZE
@@ -384,7 +384,8 @@ class SystemCapabilities(LLDPBasicTLV):
     def __init__(self, buf=None, *args, **kwargs):
         super(SystemCapabilities, self).__init__(buf, *args, **kwargs)
         if buf:
-            (self.subtype, self.system_cap, self.enabled_cap) = \
+            self.subtype = 0
+            (self.system_cap, self.enabled_cap) = \
                 struct.unpack(self._PACK_STR, self.tlv_info[:self._PACK_SIZE])
         else:
             self.subtype = kwargs['subtype']
