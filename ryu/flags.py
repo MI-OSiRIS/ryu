@@ -58,11 +58,9 @@ CONF.register_cli_opts([
                '(default: 0)'),
 ], group='test-switch')
 
-
 DEFAULT_RPC_PORT = 50002
 DEFAULT_RPC_HOST = '0.0.0.0'
 
-CONF = cfg.CONF
 CONF.register_cli_opts([
     cfg.IntOpt('rpc-port', default=DEFAULT_RPC_PORT,
                help='Port for RPC server (default: %s)' % DEFAULT_RPC_PORT),
@@ -72,3 +70,9 @@ CONF.register_cli_opts([
                help='The config file formatted in Python source file. '
                     'Please refer to "bgp_sample_conf.py" for details.')
 ], group='bgp-app')
+
+CONF.register_cli_opts([
+    cfg.StrOpt('unis_server', default='', help='unis_server'),
+    cfg.StrOpt('domain', default='', help='domain'),
+], group='osiris_main')
+
