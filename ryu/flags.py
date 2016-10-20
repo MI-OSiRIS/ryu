@@ -57,3 +57,8 @@ CONF.register_cli_opts([
                help='interval time in seconds of each test '
                '(default: 0)'),
 ], group='test-switch')
+
+CONF.register_cli_opts([
+    cfg.StrOpt('unis_server', default='', help='unis_server'),
+    cfg.StrOpt('domain', default='', help='domain'),
+], group='osiris_main')
